@@ -30,10 +30,7 @@ the same order, storing them far apart makes the picker cross the warehouse twic
 Companionship comes from Word2Vec over the order log, where each order is a sentence
 and each item is a word.
 
-The 0.6/0.4 split was not a guess. Sweeping w from 0 to 1 and re-slotting every item at
-each step gives a flat bottom between w = 0.05 and 0.45. The gap between w = 0.4 and the
-actual minimum is 0.02%. Flat bottom means the result barely depends on w, so 0.4 is
-picked from the middle of that range.
+Note that 0.6/0.4 can be changed depends on your type of layout your warehouse is.
 
 ## Layout
 
