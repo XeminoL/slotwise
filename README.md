@@ -1,5 +1,3 @@
-# Slotwise
-
 Picks a storage location for warehouse items, based on past order history.
 
 The warehouse is split into two levels. Zone A sits on the low floors where pickers
