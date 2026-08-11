@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slotwise</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231E8E4E'/%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linejoin='round'%3E%3Cpath d='M6 12 16 7l10 5-10 5z'/%3E%3Cpath d='M6 12v9l10 5 10-5v-9'/%3E%3Cpath d='M16 17v9'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+</head>
+<body>
+
+<div class="appbar">
+  <div class="logo"><svg class="lgo" viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M6 12 16 7l10 5-10 5z"/><path d="M6 12v9l10 5 10-5v-9"/><path d="M16 17v9"/></g></svg>Slotwise</div>
+  <div class="right">
+    <span id="brainState"><span class="dot"></span>…</span>
+  </div>
+</div>
+
+<div class="overlay hide" id="overlay"><div class="box"></div></div>
+
+<div class="screen">
+
+  <div class="search">
+    <div class="searchbox">
+      <svg class="mag" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <textarea id="qText" rows="1" autofocus placeholder="Enter SKU code" spellcheck="false"></textarea>
+      <button class="clear" id="qClear" title="Clear">&times;</button>
+      <button class="go" id="btnQuery">Look up</button>
+      <div class="ac hide" id="acBox"></div>
+    </div>
+    <div class="actionrow">
+      <button class="btn sm" id="btnPickSku">Pick SKU</button>
+      <button class="btn sm" id="btnRefreshStock" title="Re-read stock levels">Refresh stock</button>
+      <button class="btn sm" id="btnResetSession" title="Release cells assigned in this session">Reset session</button>
+      <button class="btn sm" id="btnClear" title="Clear all loaded warehouse data and start empty">Clear data</button>
+    </div>
+    <div id="skuAnchorTop"></div>
+    <details class="qfilter">
+      <summary>Filters</summary>
+      <div class="qfrow">
+        <label class="wide">Items often picked together
+          <input id="qComp" placeholder="Enter codes, comma separated" autocomplete="off">
+          <div class="ac hide" id="acComp"></div>
+          <button type="button" class="btn sm" id="btnPickComp">Pick from list</button></label>
+        <label class="narrow">Category
+          <input id="qCat" list="catList" placeholder="Pick a category">
+          <datalist id="catList"></datalist></label>
+      </div>
+      <div id="skuAnchorBottom"></div>
+    </details>
+    <div class="skupanel hide" id="skuPanel">
+      <div class="skufilters">
+        <select id="skuCat"><option value="">All categories</option></select>
+        <input type="text" id="skuFilter" placeholder="Filter by code or name" spellcheck="false">
+      </div>
+      <div class="skulist" id="skuList"></div>
+    </div>
+    <div class="err hide" id="qErr"></div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="empty" id="emptyState">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
+      <div class="big">Enter a code to see its location</div>
+    </div>
+  </div>
+
+  <div class="exportrow hide" id="exportRow">
+    <button class="btn sm" id="btnExcel">Export Excel</button>
+  </div>
+
+  <div class="map">
+    <div class="mh">
+      <span class="t">Warehouse map</span>
+      <span class="leg"><i class="lg-reserve"></i>Reserve<i class="lg-pick"></i>Pick</span>
+    </div>
+    <div class="heatsw" id="heatSwitch" style="display:none">
+      <span class="hlbl">Heat overlay</span>
+      <button type="button" data-heat="pick" class="on" onclick="setHeatMode('pick')">Picks</button>
+      <button type="button" data-heat="refill_out" onclick="setHeatMode('refill_out')">Refill out</button>
+      <button type="button" data-heat="refill_in" onclick="setHeatMode('refill_in')">Refill in</button>
+    </div>
+    <svg id="mapSvg" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+
+  <div class="sim" id="sessBox">
+    <div class="mh">
+      <span class="t">Session summary</span>
+    </div>
+    <div class="sess-empty" id="sessEmpty"></div>
+    <div class="sess-body hide" id="sessBody">
+      <div class="sess-kpis" id="sessKpis"></div>
+      <div class="below">
+        <div class="sub">
+          <div class="st">Score distribution</div>
+          <div class="dist" id="sessDist"></div>
+        </div>
+        <div class="sub">
+          <div class="st" id="sessBoardTitle">SKUs to review</div>
+          <dl class="facts" id="sessBoard"></dl>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="advanced" class="open inline">
+  <div class="adv-head">Advanced</div>
+  <div class="advtabs">
+    <button class="on" data-tab="dash">Dashboard</button>
+    <button data-tab="learn">Load history</button>
+    <button data-tab="model" id="tabModel" disabled>Model</button>
+  </div>
+
+  <section data-panel="dash">
+    <div class="note" id="dashLoad">Loading...</div>
+    <div class="dashbody hide" id="dashBody">
+      <div class="panel">
+        <div class="ph">Overview</div>
+        <div class="pb">
+          <div id="comboKpi" class="combo-kpi"></div>
+          <div id="cCombo" class="chartbox"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-panel="learn" class="hide">
+    <div class="panel">
+      <div class="ph">Load warehouse data</div>
+      <div class="pb">
+        <label class="drop" id="lDrop"><b>Choose files</b> / drag and drop<input type="file" id="lFile" accept=".csv,.tsv,.txt" multiple></label>
+        <div class="filelist" id="lFileList"></div>
+        <div class="learnrow"><button class="btn" id="btnLearn" disabled>Load data</button><span class="note" id="lWarn"></span></div>
+        <div class="err hide" id="lErr"></div>
+      </div>
+    </div>
+    <div class="panel prog hide" id="lProg"><div class="ph">Progress</div><div class="pb"><div class="bar"><i id="lBar"></i></div><div class="log" id="lLog"></div></div></div>
+  </section>
+
+  <section data-panel="model" class="hide">
+    <div class="kpis" id="mKpis"></div>
+    <div class="panel">
+      <div class="ph">Cluster map</div>
+      <div class="pb">
+        <div class="modelbar">
+          <button class="btn" id="mToggle">Color by category</button>
+          <div id="mLegend" class="mlegend"></div>
+        </div>
+        <div class="canvaswrap">
+          <canvas id="mCanvas" width="1120" height="560"></canvas>
+          <div id="mTip" class="mtip hide"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/vendor/echarts.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/_base.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lookup.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mapview.js') }}"></script>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/model.js') }}"></script>
+<script src="{{ url_for('static', filename='js/init.js') }}"></script>
+</body>
+</html>

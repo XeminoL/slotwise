@@ -1,0 +1,25 @@
+:root{
+
+    --bg:#F4F7F4; --panel:#FFFFFF; --panel2:#FFFFFF; --line:#DDE4DD; --line2:#E8EDE8;
+    --ink:#16241B; --dim:#5A6B5E; --faint:#8A988D;
+    --brand:#146C3A; --accent:#1E8E4E; --accent-deep:#15703C;
+    --sure:#1E8E4E; --inf:#C7891A; --guess:#D0463B;
+    --head:#EEF3EE; --input:#FFFFFF;
+    --radius:12px; --radius-sm:9px;
+    --shadow:0 1px 2px rgba(20,60,35,.06), 0 8px 22px -14px rgba(20,60,35,.22);
+    --ring:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);
+    --font-ui:"Segoe UI Variable Text","Segoe UI",Inter,system-ui,Roboto,Arial,sans-serif;
+    --font-mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{min-height:100%}
+  body{margin:0;color:var(--ink);font:14px/1.55 var(--font-ui);
+    display:flex;flex-direction:column;min-height:100vh;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+
+    background:
+      radial-gradient(1100px 460px at 82% -10%, color-mix(in srgb,var(--accent) 10%,transparent), transparent 60%),
+      linear-gradient(180deg, #EEF4EE, var(--bg) 34%);
+    background-attachment:fixed;}
+  .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  ::selection{background:color-mix(in srgb,var(--accent) 28%,transparent);color:var(--ink)}

@@ -1,0 +1,84 @@
+"""Measures pick travel for one order.
+
+This module only measures distance, it does not generate work orders. The
+numbers are here to compare travel before and after moving items around.
+
+Model: one aisle warehouse, racks numbered in sequence. The picker starts at
+the gate (aisle 0), visits the aisles holding the items, then walks back. With
+this model the shortest walk is twice the farthest aisle, no need to solve a
+TSP. A TSP only matters in a warehouse with several cross aisles, so that
+number is reported alongside for reference.
+"""
+
+import re
+from itertools import permutations
+
+GATE = 0
+MAX_TSP_STOPS = 9
+
+
+def _aisle_num(aisle_code):
+    m = re.match(r"^[A-Za-z]+(\d+)$", aisle_code or "")
+    return int(m.group(1)) if m else None
+
+
+def distance_one_way(aisles):
+    """One aisle warehouse: walk to the farthest aisle and back. Unit is aisles."""
+    nums = [n for n in (_aisle_num(a) for a in aisles) if n is not None]
+    if not nums:
+        return 0
+    return 2 * (max(nums) - GATE)
+
+
+def distance_tsp(aisles):
+    """Tries every visit order and keeps the shortest total. Only for few aisles."""
+    nums = sorted({n for n in (_aisle_num(a) for a in aisles) if n is not None})
+    if not nums:
+        return 0
+    if len(nums) > MAX_TSP_STOPS:
+        return distance_one_way(aisles)
+
+    best = None
+    for order in permutations(nums):
+        total = abs(order[0] - GATE)
+        for a, b in zip(order, order[1:]):
+            total += abs(b - a)
+        total += abs(order[-1] - GATE)
+        if best is None or total < best:
+            best = total
+    return best
+
+
+def measure_order(aisles):
+    """Returns the travel measures for one order."""
+    nums = sorted({n for n in (_aisle_num(a) for a in aisles) if n is not None})
+    if not nums:
+        return None
+    return {
+        "aisles": len(nums),
+        "span": nums[-1] - nums[0],
+        "one_way": distance_one_way(aisles),
+        "tsp": distance_tsp(aisles),
+        "sequence": nums,
+    }
+
+
+def measure_orders(orders, aisle_of_item):
+    """Averages the measures over a set of orders.
+
+    orders: dict order id -> set of items
+    aisle_of_item: dict item -> aisle code
+    """
+    total = {"aisles": 0, "span": 0, "one_way": 0, "tsp": 0}
+    count = 0
+    for item_set in orders.values():
+        aisles = [aisle_of_item[i] for i in item_set if i in aisle_of_item]
+        result = measure_order(aisles)
+        if not result:
+            continue
+        for k in total:
+            total[k] += result[k]
+        count += 1
+    if not count:
+        return None
+    return {k: round(v / count, 3) for k, v in total.items()} | {"orders": count}

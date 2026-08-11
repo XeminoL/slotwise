@@ -1,0 +1,73 @@
+{
+  "_note": "Map your WMS export to the fields Slotwise needs. Copy this file to schema.json and edit the right-hand values to match your own column names, file names and flag values. Nothing here is tied to a particular WMS.",
+  "files": {
+    "pick": "pick_history.csv",
+    "refill_log": "refill_log.csv",
+    "location": "locations.csv",
+    "stock": "stock.csv",
+    "product": "products.csv"
+  },
+  "columns": {
+    "auto_id": "auto_id",
+    "deleted": "deleted",
+    "warehouse_id": "warehouse_id",
+    "location_type_id": "location_type_id",
+    "location_code": "location_code",
+    "location_id": "location_id",
+    "qty_in": "qty_in",
+    "qty_out": "qty_out",
+    "location_code_from": "location_code_from",
+    "location_code_to": "location_code_to",
+    "status_id": "status_id",
+    "product_id": "product_id",
+    "created": "created",
+    "refill_operator": "refill_operator",
+    "refill_qty": "refill_qty",
+    "gross_weight": "gross_weight",
+    "product_code": "product_code",
+    "product_name": "product_name",
+    "order_id": "order_id",
+    "category_id": "category_id"
+  },
+  "flags": {
+    "_note": "Values as they appear in your export. warehouse_id filters rows to one site; status_done marks a completed movement; location_locked is the status id of a cell that must never be suggested.",
+    "warehouse_id": "1",
+    "status_done": "1",
+    "location_locked": "0",
+    "deleted": "1"
+  },
+  "location_format": {
+    "_note": "Location codes are parsed as PREFIX + AISLE - SEQUENCE - FLOOR, e.g. R14-07-06.",
+    "pattern": "^([A-Za-z]+)(\\d+)-(\\d+)-(\\d+)$",
+    "reserve_zone": "R",
+    "pick_zone": "A",
+    "pallet_zone": "P",
+    "cells_per_aisle": 20
+  },
+  "file_signatures": {
+    "_note": "Optional. Header names (lowercased, non-alphanumerics stripped) that identify each file when several CSVs are uploaded at once. Leave empty to fall back on shape-based detection.",
+    "refill_log": [
+      "location_code_to",
+      "refill_qty"
+    ],
+    "stock": [
+      "qty_in",
+      "qty_out"
+    ],
+    "location": [
+      "location_code",
+      "location_type_id"
+    ],
+    "product": [
+      "product_name",
+      "units_per_pallet"
+    ],
+    "pick": [
+      "order_id",
+      "product_id"
+    ]
+  },
+  "category_names": {
+    "_note": "Optional. Map your category id to a display name, e.g. \"1001\": \"Dry goods\". Ids not listed here are shown as-is."
+  }
+}
