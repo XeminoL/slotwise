@@ -13,9 +13,7 @@ back into a WMS.
 ![Lookup results](docs/img/02-results.png)
 
 Paste in a batch of item codes and each one comes back with a cell, a fit score, the
-pick aisles it serves, and the items it usually ships with. Screenshots on this page
-come from a generated sample warehouse: 22 aisles, 4,224 cells, 320 items, 14,000
-orders.
+pick aisles it serves, and the items it usually ships with.
 
 ## Scoring
 
@@ -37,15 +35,9 @@ and each item is a word.
 
 Note that 0.6/0.4 can be changed depends on your type of layout your warehouse is.
 
-The map shows where the suggestions landed. Green marks the reserve aisles that were
-picked, a badge appears when more than one item goes to the same aisle, and the row
-below shades every pick aisle by how busy it is.
+The map shows where the suggestions landed (the shading switches between three counts):
 
 ![Warehouse map, pick volume](docs/img/04-heat-picks.png)
-
-The shading switches between three counts. Above is pick volume. Below is refill out,
-the aisles pallets leave from, then refill in, the aisles they land in. A busy pick
-aisle and a busy refill source are rarely the same aisle.
 
 ![Warehouse map, refill out](docs/img/05-heat-refill-out.png)
 
@@ -94,11 +86,6 @@ python web/app.py
 Open http://127.0.0.1:5000 and upload five CSVs: pick history, refill log, location
 list, stock, product list.
 
-![Loading data](docs/img/10-load.png)
-
-Drop all five in at once. Slotwise works out which file is which from the headers, so
-the order does not matter.
-
 Slotwise ships with no data. It reads exports from your own WMS, and `schema.json` is
 where you declare the real column and file names. Without that file it falls back to
 the placeholder names in `schema.example.json`.
@@ -123,25 +110,17 @@ python tools/retrain.py
 The `research/` scripts also read `SLOTWISE_WAREHOUSE`, `SLOTWISE_STATUS_DONE`,
 `SLOTWISE_DELETED` and the `COL_*` / `F_*` variables. See `research/_common.py`.
 
-## The rest of the screens
-
-A running total for the batch you just looked up, with the weakest suggestions listed
-so you can check them by hand:
+## All functions
 
 ![Session summary](docs/img/07-session.png)
 
-Two views of the same batch. The scatter puts refill spread against companion
-closeness, so anything drifting to the bottom right is an item whose refills come from
-all over. The bar chart is the same items ranked by score:
-
 ![Dashboard](docs/img/08-dashboard.png)
 
-The model tab shows what Word2Vec learned. Each dot is an item, placed by UMAP so items
-that ship together sit near each other, colored by KMeans cluster or by category:
+Word2Vec:
 
 ![Cluster map](docs/img/09-model.png)
 
-And the starting state, before anything is looked up:
+Full view of the system:
 
 ![Empty state](docs/img/01-empty.png)
 
