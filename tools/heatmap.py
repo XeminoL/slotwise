@@ -1,9 +1,3 @@
-"""Measures how busy each aisle is and writes a cache for the heatmap.
-
-Run: python tools/heatmap.py
-Reads pick history and the replenishment log, counts activity per aisle.
-"""
-
 import csv
 import json
 import re
@@ -21,7 +15,6 @@ MAX_PICK_ROWS = 3_000_000
 
 
 def _aisle_of_location():
-    """Maps location id to aisle code. Main warehouse only, locked cells skipped."""
     aisle = {}
     cols = (ck.col("auto_id"), ck.col("location_code"), ck.col("warehouse_id"),
             ck.col("status_id"), ck.col("deleted"))
@@ -40,7 +33,6 @@ def _aisle_of_location():
 
 
 def _count_picks(aisle_of):
-    """Counts picks per aisle."""
     counts = Counter()
     loc_col = ck.col("location_id")
     with ck.file_path("pick").open(encoding="utf-8", newline="") as f:
@@ -54,7 +46,6 @@ def _count_picks(aisle_of):
 
 
 def _count_refills(aisle_of):
-    """Counts replenishment moves by source aisle and destination aisle."""
     source, dest = Counter(), Counter()
     from_col = ck.col("location_code_from")
     to_col = ck.col("location_code_to")
@@ -68,7 +59,6 @@ def _count_refills(aisle_of):
 
 
 def _to_ratio(counts):
-    """Rescales counts to 0..100 against the busiest aisle."""
     if not counts:
         return {}
     peak = max(counts.values())
