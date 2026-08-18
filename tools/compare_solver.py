@@ -1,14 +1,3 @@
-"""Compares the aisle picking heuristic against a constraint solver (OR-Tools CP-SAT).
-
-Point: measure how far the heuristic sits from the optimal solution.
-Run: python tools/compare_solver.py
-
-Problem: assign N items to M reserve aisles, each aisle has a capacity. The
-objective is the sum of placement scores (0..100 per item), the same formula
-core/brain.py uses. CP-SAT solves this assignment to optimality at small size,
-which makes it a usable baseline.
-"""
-
 import sys
 from pathlib import Path
 
