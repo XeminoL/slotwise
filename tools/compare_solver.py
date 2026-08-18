@@ -13,11 +13,6 @@ UNLIMITED_CAPACITY = 10**6
 
 
 def _collect_candidates(brain, item_list):
-    """For each item, takes the list of (aisle, score) from the heuristic itself.
-
-    The score comes from the share_pct field of place(), the same scale the
-    heuristic ranks by, so the comparison does not change the objective.
-    """
     candidates = {}
     chosen = {}
     for item in item_list:
