@@ -33,7 +33,7 @@ the same order, storing them far apart makes the picker cross the warehouse twic
 Companionship comes from Word2Vec over the order log, where each order is a sentence
 and each item is a word.
 
-Note that 0.6/0.4 can be changed depends on your type of layout your warehouse is.
+The 0.6/0.4 split can be changed to suit your warehouse layout.
 
 The map shows where the suggestions landed (the shading switches between three counts):
 
@@ -67,7 +67,7 @@ web/
   app.py          Flask API
   router.py       works out what each uploaded CSV is
   dashboard.py    summary figures
-  templates/, static/
+  templates/index.html, static/
 
 tools/
   retrain.py         rebuild the model
@@ -85,6 +85,8 @@ python web/app.py
 
 Open http://127.0.0.1:5000 and upload five CSVs: pick history, refill log, location
 list, stock, product list.
+
+![Loading the warehouse exports](docs/img/10-load.png)
 
 Slotwise ships with no data. It reads exports from your own WMS, and `schema.json` is
 where you declare the real column and file names. Without that file it falls back to
