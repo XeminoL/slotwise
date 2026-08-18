@@ -16,7 +16,7 @@ REQUIRED_ROLES = ("pick", "location", "product")
 def _read_file(role):
     p = warehouse.WAREHOUSE_DIR / warehouse.ROLE_FILES[role]
     if not p.exists():
-        raise SystemExit(f"Missing file {p}. Upload the data through the web app first.")
+        raise SystemExit(f"Missing file {p}.")
     return p.name, p.read_bytes()
 
 
