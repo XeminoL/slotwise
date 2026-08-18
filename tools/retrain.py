@@ -1,12 +1,3 @@
-"""Retrains brain.pkl from the data already loaded into cache/.
-
-Run: python tools/retrain.py
-
-Follows the same path the web app takes: loader -> router.diagnose ->
-brain.build -> brain.save. It does not call /api/load-history, because that
-route clears the cache before training.
-"""
-
 import sys
 import time
 from pathlib import Path
