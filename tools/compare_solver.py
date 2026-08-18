@@ -87,7 +87,7 @@ def count_by_aisle(assignment):
 def main():
     brain = brain_mod.load()
     if brain is None:
-        print("No brain.pkl yet. Run tools/retrain.py first.")
+        print("No brain.pkl yet.")
         return
 
     item_list = list(brain["advice"])[:NUM_ITEMS]
