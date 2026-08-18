@@ -95,7 +95,7 @@ if __name__ == "__main__":
     try:
         d = load(force=True)
     except FileNotFoundError as err:
-        raise SystemExit(f"Missing data file: {err.filename}. Upload the data through the web app first.")
+        raise SystemExit(f"Missing data file: {err.filename}.")
     print(f"wrote {OUT_FILE.name}")
     for name in ("pick", "refill_out", "refill_in"):
         top = sorted(d["raw"][name].items(), key=lambda kv: -kv[1])[:5]
