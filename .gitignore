@@ -1,4 +1,3 @@
-# Data and trained models stay out of the repo
 cache/
 data_in/
 schema.json
