@@ -123,7 +123,3 @@ Word2Vec:
 Full view of the system:
 
 ![Empty state](docs/img/01-empty.png)
-
-## License
-
-MIT
