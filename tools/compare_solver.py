@@ -106,11 +106,9 @@ def main():
     print(f"most the heuristic put in one aisle: {busiest}")
     print()
 
-    # Round 1: no capacity limit on either side, so this measures aisle choice alone.
     result_free = solve_cp_sat(
         candidates, {a: UNLIMITED_CAPACITY for a in all_aisles})
 
-    # Round 2: same capacity limit on both sides.
     cap = busiest
     result_capped = solve_cp_sat(candidates, {a: cap for a in all_aisles})
 
