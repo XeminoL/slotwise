@@ -28,7 +28,6 @@ def _collect_candidates(brain, item_list):
 
 
 def solve_cp_sat(candidates, capacity):
-    """Assigns items to aisles for the highest total score, respecting capacity."""
     model = cp_model.CpModel()
     var = {}
 
@@ -70,7 +69,6 @@ def solve_cp_sat(candidates, capacity):
 
 
 def score_of_current_approach(candidates, chosen):
-    """Total score when taking the aisle the heuristic suggested."""
     total = 0
     for item, ds in candidates.items():
         aisle = chosen.get(item)
