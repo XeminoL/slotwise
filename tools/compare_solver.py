@@ -129,16 +129,12 @@ def main():
     if result_free:
         diff = sum(1 for item, aisle in result_free["assignment"].items()
                    if chosen.get(item) != aisle)
-        print(f"CP-SAT (no limit) placed differently from the heuristic: "
+        print(f"CP-SAT placed differently from the heuristic: "
               f"{diff} / {len(result_free['assignment'])} items")
         print(f"solve time: {result_free['wall_time']}s, "
               f"status {result_free['status']}")
 
     print()
-    print("How to read this: the heuristic does not cap capacity when it picks an")
-    print("aisle, so only the first row compares like with like. The second row shows")
-    print("the score lost when items have to spread across more aisles.")
-
 
 if __name__ == "__main__":
     main()
