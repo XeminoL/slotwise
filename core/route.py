@@ -1,15 +1,3 @@
-"""Measures pick travel for one order.
-
-This module only measures distance, it does not generate work orders. The
-numbers are here to compare travel before and after moving items around.
-
-Model: one aisle warehouse, racks numbered in sequence. The picker starts at
-the gate (aisle 0), visits the aisles holding the items, then walks back. With
-this model the shortest walk is twice the farthest aisle, no need to solve a
-TSP. A TSP only matters in a warehouse with several cross aisles, so that
-number is reported alongside for reference.
-"""
-
 import re
 from itertools import permutations
 
@@ -23,7 +11,6 @@ def _aisle_num(aisle_code):
 
 
 def distance_one_way(aisles):
-    """One aisle warehouse: walk to the farthest aisle and back. Unit is aisles."""
     nums = [n for n in (_aisle_num(a) for a in aisles) if n is not None]
     if not nums:
         return 0
@@ -31,7 +18,6 @@ def distance_one_way(aisles):
 
 
 def distance_tsp(aisles):
-    """Tries every visit order and keeps the shortest total. Only for few aisles."""
     nums = sorted({n for n in (_aisle_num(a) for a in aisles) if n is not None})
     if not nums:
         return 0
@@ -50,7 +36,6 @@ def distance_tsp(aisles):
 
 
 def measure_order(aisles):
-    """Returns the travel measures for one order."""
     nums = sorted({n for n in (_aisle_num(a) for a in aisles) if n is not None})
     if not nums:
         return None
@@ -64,11 +49,6 @@ def measure_order(aisles):
 
 
 def measure_orders(orders, aisle_of_item):
-    """Averages the measures over a set of orders.
-
-    orders: dict order id -> set of items
-    aisle_of_item: dict item -> aisle code
-    """
     total = {"aisles": 0, "span": 0, "one_way": 0, "tsp": 0}
     count = 0
     for item_set in orders.values():
