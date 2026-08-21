@@ -35,7 +35,7 @@ and each item is a word.
 
 The 0.6/0.4 split can be changed to suit your warehouse layout.
 
-The map shows where the suggestions landed (the shading switches between three counts):
+The map shows where the suggestions landed:
 
 ![Warehouse map, pick volume](docs/img/04-heat-picks.png)
 
